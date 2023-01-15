@@ -6,9 +6,7 @@ Authors@R:
     person("Raul", "Aguilar", , "foo@bar.com", role = c("aut", "cre"))
     person("Ritisha", "Sharma", , "foo@bar.com", role = c("aut", "cre"))
     person("Sneha", "Sunil", , "foo@bar.com", role = c("aut", "cre"))
-Description: pokehelperr is an R package designed to assist Pokémon players in building 
-teams of pokémon. Users can provide a list of pokémon currently on their team, and pokehelperr 
-will recommend a suitable pokémon to add to the team based on the current team's overall weaknesses and resistances.
+Description: pokehelperr is an R package designed to assist Pokémon players in building teams of pokémon. Users can provide a list of pokémon currently on their team, and pokehelperr will recommend a suitable pokémon to add to the team based on the current team's overall weaknesses and resistances.
 License: `use_mit_license()`
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
