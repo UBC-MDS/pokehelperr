@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @examples
-get_types <- function(pokemon_names){
+get_types <- function(pokemon_names) {
   # Function code (TBD in Milestone 3)
 }
 
@@ -19,8 +19,8 @@ get_types <- function(pokemon_names){
 #' @export
 #'
 #' @examples
-calc_resistances <- function(team_list){
-  # Function code (TBD)
+calc_resistances <- function(team_list) {
+  # Function code (TBD in Milestone 3)
 }
 
 #' Given a list of pokémon types present on a player's team,
@@ -56,7 +56,7 @@ calc_weaknesses <- function(team_types) {
 #' @export
 #'
 #' @examples
-recommend <- function(current_team){
-  # Function code (TBD)
+recommend <- function(current_team) {
+  # Function code (TBD in Milestone 3)
 }
 
