@@ -23,16 +23,29 @@ calc_resistances <- function(team_list){
   # Function code (TBD)
 }
 
-#' calc_weaknesses
+#' Given a list of pokémon types present on a player's team,
+#' calculate a measure of how weak the team is to each type in the game.
 #'
-#' @param team_list
+#' Creates a dictionary in which the keys are each of the 18 types
+#' in the game, and the values are integers measuring the level of
+#' weakness the input team has to that key (type). Higher values indicate a
+#' higher level of weakness to that type.
 #'
-#' @return
+#' @param team_list : list of list of strings
+#'        list of pokémon types associated to the user's team obtained
+#'        via `get_types`
+#'
+#' @return weaknesses : dictionary
+#'       a dictionary containing all 18 pokémon types as keys,
+#'       and integers measuring the level of weakness the input team
+#'       has to that type as values.
+#'
 #' @export
 #'
 #' @examples
-calc_weaknesses <- function(team_list){
-  # Function code (TBD)
+#' calc_weaknesses(list(list("Electric"), list("Fire", "Flying")))
+calc_weaknesses <- function(team_types) {
+  # Function code (TBD in Milestone 3)
 }
 
 #' recommend
