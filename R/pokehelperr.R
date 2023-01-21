@@ -26,7 +26,7 @@ calc_resistances <- function(team_list) {
 #' Given a list of pokémon types present on a player's team,
 #' calculate a measure of how weak the team is to each type in the game.
 #'
-#' Creates a dictionary in which the keys are each of the 18 types
+#' Creates a list in which the keys are each of the 18 types
 #' in the game, and the values are integers measuring the level of
 #' weakness the input team has to that key (type). Higher values indicate a
 #' higher level of weakness to that type.
@@ -35,8 +35,8 @@ calc_resistances <- function(team_list) {
 #'        list of pokémon types associated to the user's team obtained
 #'        via `get_types`
 #'
-#' @return weaknesses : dictionary
-#'       a dictionary containing all 18 pokémon types as keys,
+#' @return weaknesses : list
+#'       a list containing all 18 pokémon types
 #'       and integers measuring the level of weakness the input team
 #'       has to that type as values.
 #'
