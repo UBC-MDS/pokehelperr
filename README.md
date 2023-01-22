@@ -75,7 +75,7 @@ devtools::install_github("../pokehelperr")
 
 ## Contributing
 
-Interested in contributing? Check out the [contributing guidelines](https://github.com/UBC-MDS/pokehelperr/blob/main/CONTRIBUTING.md). Please note that this project is released with a [Code of Conduct](https://github.com/UBC-MDS/pokehelperr/blob/main/CONDUCT.md). By contributing to this project, you agree to abide by its terms.
+Interested in contributing? Check out the [contributing guidelines](https://github.com/UBC-MDS/pokehelperr/blob/main/.github/CONTRIBUTING.md). Please note that this project is released with a [Code of Conduct](https://github.com/UBC-MDS/pokehelperr/blob/main/CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
 
 ## License
 
