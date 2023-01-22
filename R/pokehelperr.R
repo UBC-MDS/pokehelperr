@@ -127,6 +127,6 @@ recommend <- function(current_team) {
 #' weaknesses = calc_weaknesses(get_types(bad_team))
 #' calc_balance(resistances, weaknesses)
 #'
-calc_balance <- function(current_team) {
+calc_balance <- function(resistances, weaknesses) {
   # Function code (TBD in Milestone 3)
 }
