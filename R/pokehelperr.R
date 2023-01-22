@@ -29,8 +29,8 @@ get_types <- function(pokemon_names) {
 #'                         team has to that type as values.
 #'
 #' @examples calc_resistances(list(list('Electric'), list('normal')))
-calc_resistances <- function(team_list){
-  # Function code (TBD)
+calc_resistances <- function(team_list) {
+  # Function code (TBD in Milestone 3)
 }
 
 #' Given a list of pokémon types present on a player's team,
