@@ -28,7 +28,7 @@ get_types <- function(pokemon_names) {
 # '                        measuring the level of resistance the input
 #'                         team has to that type as values.
 #'
-#' @examples calc_resistances(list(list('Electric'), list('normal')))
+#' @examples
 calc_resistances <- function(team_list) {
   # Function code (TBD in Milestone 3)
 }
