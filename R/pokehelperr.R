@@ -18,6 +18,7 @@
 #'
 #' @examples
 #' get_types(list('Pikachu', 'Eevee', 'Charizard', ...))
+#'
 get_types <- function(pokemon_names) {
   # Function code (TBD in Milestone 3)
 }
@@ -42,6 +43,7 @@ get_types <- function(pokemon_names) {
 #'
 #' @examples
 #' calc_resistances(list(list("Electric"), list("Fire", "Flying")))
+#'
 calc_resistances <- function(team_list) {
   # Function code (TBD in Milestone 3)
 }
@@ -71,6 +73,7 @@ calc_resistances <- function(team_list) {
 #'
 #' @examples
 #' calc_weaknesses(list(list("Electric"), list("Fire", "Flying")))
+#'
 calc_weaknesses <- function(team_types) {
   # Function code (TBD in Milestone 3)
 }
@@ -98,8 +101,32 @@ calc_weaknesses <- function(team_types) {
 #' @export
 #'
 #' @examples
+#' recommend(list('Pikachu', 'Eevee', 'Charizard'))
+#'
 recommend <- function(current_team) {
   # Function code (TBD in Milestone 3)
 }
 
 
+#' calc_balance
+#'
+#' @description Calculate a measure of how balanced a team is using its
+#' weaknesses and resistances.
+#' Higher values indicate a more balanced team.
+#'
+#' @param resistances: list of resistances obtained from calc_resistances
+#' @param weaknesses: list of weaknesses obtained from calc_weaknesses
+#'
+#' @return  balance : float
+#' measure of how balanced the team is.
+#' @export
+#'
+#' @examples
+#' bad_team = ['Abomasnow', 'Ferrothorn', 'Parasect'] # All are doubly weak to fire
+#' resistances = calc_resistances(get_types(bad_team))
+#' weaknesses = calc_weaknesses(get_types(bad_team))
+#' calc_balance(resistances, weaknesses)
+#'
+calc_balance <- function(current_team) {
+  # Function code (TBD in Milestone 3)
+}
