@@ -29,10 +29,14 @@ get_types <- function(pokemon_names) {
 #'                         team has to that type as values.
 #'
 #' @examples
+#' calc_resistances(list(list("Electric"), list("Fire", "Flying")))
 calc_resistances <- function(team_list) {
   # Function code (TBD in Milestone 3)
 }
 
+#' calc_weaknesses 
+#'
+#' @description
 #' Given a list of pokémon types present on a player's team,
 #' calculate a measure of how weak the team is to each type in the game.
 #'
