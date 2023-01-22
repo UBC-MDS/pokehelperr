@@ -1,12 +1,23 @@
 
 #' get_types
 #'
-#' @param pokemon_names
+#' @description
+#' Given a list of pokémon names, 
+#' determine the types of those pokémon using an existing dataset.
 #'
-#' @return
+#' Creates a list with pokemon types by matching the pokemon names
+#' to the names in a dataset and getting the corresponding type(s) 
+#' of the pokemon. The pokemon names are cleaned before looking for a match.
+#'
+#' @param pokemon_names a list of pokemon names that are on the users team
+#'
+#' @return pokemon_types a list of strings of pokémon types corresponding to 
+#'         the pokémon names in the input list
+#' 
 #' @export
 #'
-#' @examples
+#' @examples 
+#' get_types(list('Pikachu', 'Eevee', 'Charizard', ...)) 
 get_types <- function(pokemon_names) {
   # Function code (TBD in Milestone 3)
 }
