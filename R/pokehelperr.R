@@ -21,7 +21,53 @@
 #'
 get_types <- function(pokemon_names) {
   # Function code (TBD in Milestone 3)
-  list(c('Electric'), c('Fire', 'Flying')) # Temporary placeholder
+  if (is.character(pokemon_names)){
+      pokemon_names = list(c(pokemon_names))
+    }
+
+    assert("Input is a list of pokemon names.", {
+       is.list(pokemon_names)
+    })
+    assert("Input should be a non-empty list of pokemon names.", {
+      length(list) > 0
+    })
+    assert("Input should be a list of pokemon names.", {
+      is.character(pokemon_names[[1]])
+    })
+
+    names_types_df  <- read.csv('data/pokemon.csv')
+
+    names_types_df <- names_types_df |>
+        dplyr::mutate(Name = glue::trim(Name), Name = tolower(Name))
+
+    name_with_symbol <- stringr::str_extract(names_types_df$Name, ".*[^\\w\\s].*")
+    name_with_symbol <- name_with_symbol[!is.na(name_with_symbol)]
+
+    poke_types <- list()
+    for (name in pokemon_names){
+        name <- glue::trim(name)
+        name <- tolower(name)
+
+        if (!(name %in% name_with_symbol)){
+            name <- stringr::str_remove_all(name, "[^a-zA-Z0-9 ]")
+        }
+
+        type <- names_types_df |>
+          dplyr::filter(Name == name)
+
+        assert("Pokemon not in the list", {
+          (nrow(type) > 0)
+        })
+
+        if (type$`Type.2` != ""){
+          poke_types[[length(poke_types)+1]] <- list(type$`Type.1`, type$`Type.2`)
+        }
+        else {
+          poke_types[[length(poke_types)+1]] <- list(type$`Type.1`)
+        }
+    }
+
+    return (poke_types)
 }
 
 
