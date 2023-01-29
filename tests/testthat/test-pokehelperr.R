@@ -60,7 +60,7 @@ test_that("`calc_weaknesses` returns an error when the input is invalid", {
 
 test_that("`recommend` returns the correct type of output.", {
   output <- recommend(
-    c('Pikachu', 'Charizard'),
+    list('Pikachu', 'Charizard'),
     n_recommendations = 1,
     early_stop = FALSE # Do a full run for one test. Early stop for the rest.
   )
@@ -68,7 +68,7 @@ test_that("`recommend` returns the correct type of output.", {
 
   n <- 3
   output <- recommend(
-    c('Pikachu', 'Charizard'),
+    list('Pikachu', 'Charizard'),
     n_recommendations = n,
     early_stop = TRUE
   )

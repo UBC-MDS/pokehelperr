@@ -221,8 +221,8 @@ calc_weaknesses <- function(team_types) {
 #' all ~700 pokémon to determine its recommendation based on the objective of
 #' maximizing balance.
 #'
-#' @param current_team : character vector
-#' character vector of up to 5 pokémon names
+#' @param current_team : list of character vectors
+#' list of up to 5 pokémon names
 #' @param n_recommendations : integer
 #' number of pokemon to recommend (default = 1).
 #' @param include_legendaries : boolean
@@ -243,7 +243,7 @@ calc_weaknesses <- function(team_types) {
 #' @export
 #'
 #' @examples
-#' recommend(c('Pikachu', 'Eevee', 'Charizard'))
+#' recommend(list('Pikachu', 'Eevee', 'Charizard'))
 #'
 recommend <- function(current_team, n_recommendations=1,
     include_legendaries=FALSE, include_megas=FALSE,
