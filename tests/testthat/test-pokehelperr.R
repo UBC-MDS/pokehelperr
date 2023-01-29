@@ -1,3 +1,18 @@
+test_that("Able to handle improper capitalization", {
+  expect_equal(get_types(list("RaICHu", "zubAt")), list(list("Electric"), list("Poison", "Flying")))
+})
+
+test_that("Able to handle improper punctuation", {
+  expect_equal(get_types(list("Snorlax!!", "...Chingling")), list(list("Normal"),
+                                                                 list("Psychic")))
+})
+
+test_that("Able to handle Pokemon with symbol in the name", {
+  expect_equal(get_types(list("Mime Jr.", "Porygon-Z", "Nidoran♀")), list(list("Psychic", "Fairy"),
+                                                                         list("Normal"),
+                                                                         list("Poison")))
+})
+
 
 test_that("`calc_weaknesses` returns valid results", {
   input_list <- list(c("Fire"), c("Steel", "Flying"), c("Grass", "Ice"))
