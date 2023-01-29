@@ -21,6 +21,7 @@
 #'
 get_types <- function(pokemon_names) {
   # Function code (TBD in Milestone 3)
+  list(c('Electric'), c('Fire', 'Flying')) # Temporary placeholder
 }
 
 
@@ -48,6 +49,7 @@ get_types <- function(pokemon_names) {
 #'
 calc_resistances <- function(team_list) {
   # Function code (TBD in Milestone 3)
+  c('Normal' = 1 , 'Fire' = 3, 'Water' = 1 ) # Temporary placeholder
 }
 
 
@@ -136,20 +138,111 @@ calc_weaknesses <- function(team_types) {
 #' most resistant to via `calc_resistances` and
 #' `calc_weaknesses`, and then makes its recommendation
 #' based on this information.
+#' In particular, it uses `calc_balance` together a brute-force search of
+#' all ~700 pokémon to determine its recommendation based on the objective of
+#' maximizing balance.
 #'
-#' @param current_team: list of strings
-#' list of up to 5 pokémon names
+#' @param current_team : character vector
+#' character vector of up to 5 pokémon names
+#' @param n_recommendations : integer
+#' number of pokemon to recommend (default = 1).
+#' @param include_legendaries : boolean
+#' whether or not to include legendary pokémon in
+#' the recommendations (default = False).
+#' @param inlude_megas : boolean
+#' whether or not to include Mega pokémon in
+#' the recommendations (default = False).
+#' @param verbose : boolean
+#' whether or not to print progress updates during the brute-force search.
+#' @param early_stop : boolean
+#' whether or not to stop the brute force search early
+#' (for speeding up unit testing) (default = False).
 #'
-#' @return recommendation: string
+#' @return recommendation : character vector
 #' the name of a pokémon that could be added to the input
 #' team to make its weaknesses and resistances more balanced.
 #' @export
 #'
 #' @examples
-#' recommend(list('Pikachu', 'Eevee', 'Charizard'))
+#' recommend(c('Pikachu', 'Eevee', 'Charizard'))
 #'
-recommend <- function(current_team) {
-  # Function code (TBD in Milestone 3)
+recommend <- function(current_team, n_recommendations=1,
+    include_legendaries=FALSE, include_megas=FALSE,
+    verbose=TRUE, early_stop=FALSE) {
+
+  data_location <- paste0(here::here(), '/data/pokemon.csv')
+  pokemon_df <- readr::read_csv(data_location, show_col_types = FALSE)
+  if (!include_legendaries){
+    pokemon_df <- pokemon_df |> dplyr::filter(Legendary == FALSE)
+  }
+  if (!include_megas){
+    pokemon_df <- pokemon_df |> dplyr::filter(!stringr::str_detect(Name, "Mega"))
+  }
+
+  team_types <- get_types(current_team)
+  current_resistances <- calc_resistances(team_types)
+  current_weaknesses <- calc_weaknesses(team_types)
+
+  results_df <- pokemon_df |>
+    dplyr::mutate(Balance = rlang::rep_along(Name, -Inf)) |>
+    dplyr::rename(Type_1 = `Type 1`, Type_2 = `Type 2`)
+
+  # Loop through all possible pokemon that could be added to the team
+  for (i in seq_along(results_df$Name)){
+    pkmn_types <- c(results_df$Type_1[i], results_df$Type_2[i])
+    if (is.na(pkmn_types[2])){
+      pkmn_types <- head(pkmn_types, -1)
+    }
+
+    pkmn_resistances <- calc_resistances(list(pkmn_types))
+    pkmn_weaknesses <- calc_weaknesses(list(pkmn_types))
+
+    # add the pokemon's resistances to the current team's resistances
+    new_resistances <- current_resistances
+    for (j in seq_along(new_resistances)){
+      new_resistances[j] = current_resistances[j] + pkmn_resistances[j]
+    }
+
+    # add the pokemon's weaknesses to the current team's weaknesses
+    new_weaknesses <- current_weaknesses
+    for (j in seq_along(new_weaknesses)){
+      new_weaknesses[j] = current_weaknesses[j] + pkmn_weaknesses[j]
+    }
+
+    results_df$Balance[i] <- calc_balance(new_resistances, new_weaknesses)
+
+    if (verbose && (i %% 100 == 0 || i == 1)){
+      print(paste0('Iteration number ', i, ' of ', nrow(results_df), '.'))
+    }
+    if (early_stop && i > 30){
+      print('Stopping early because `early_stop = TRUE`.')
+      print('Normally this is only used for testing.')
+      break
+    }
+  }
+
+  results_df <- results_df |> dplyr::arrange(
+    dplyr::desc(Balance),
+    dplyr::desc(Total)
+  )
+
+  if (n_recommendations == 1){
+    return(results_df$Name[1])
+  }
+
+  temp_df <- results_df
+  recommendations <- c()
+  for (i in seq(n_recommendations)){
+    recommendations <- append(recommendations, temp_df$Name[1])
+    current_best_balance <- temp_df$Balance[1]
+    temp_df <- temp_df |> dplyr::filter(Balance != current_best_balance) |>
+      dplyr::arrange(
+        dplyr::desc(Balance),
+        dplyr::desc(Total)
+      )
+  }
+
+  return(recommendations)
 }
 
 
@@ -171,4 +264,5 @@ recommend <- function(current_team) {
 #'
 calc_balance <- function(resistances, weaknesses) {
   # Function code (TBD in Milestone 3)
+  rnorm(1) # Temporary placeholder
 }
