@@ -64,7 +64,7 @@ calc_resistances <- function(team_list) {
 #' weakness the input team has to that key (type). Higher values indicate a
 #' higher level of weakness to that type.
 #'
-#' @param team_list : list of list of strings
+#' @param team_list : list of character vectors
 #'        list of pokémon types associated to the user's team obtained
 #'        via `get_types`
 #'
@@ -79,47 +79,41 @@ calc_resistances <- function(team_list) {
 #' calc_weaknesses(list(list("Electric"), list("Fire", "Flying")))
 #'
 calc_weaknesses <- function(team_types) {
+
   if (length(team_types) == 0) {
     stop("Input should be a non-empty list of pokemon types.")
   }
 
-  if (!is.list(team_types) || !all(sapply(team_types, is.list))) {
-    stop("Input should be a list of lists of pokemon types.")
+  if (!is.list(team_types) || !all(sapply(team_types, is.character))) {
+    stop("Input should be a list of character vectors of pokemon types.")
   }
 
-  if (length(team_types[[1]]) == 0) {
-    stop("Input should be a non-empty list of non-empty lists of pokemon types.")
-  }
+  data_location <- paste0(here::here(), '/data/type_chart.csv')
+  weakness_df <- readr::read_csv(data_location, show_col_types = FALSE)
 
-  if (!all(sapply(team_types, function(x) all(sapply(x, is.character))))) {
-    stop("Input should be a list of lists of strings.")
-  }
+  all_types <- weakness_df$Attacking
+  weaknesses <- stats::setNames(rep(0, length(all_types)), all_types)
 
-  url <- "https://raw.githubusercontent.com/zonination/pokemon-chart/master/chart.csv"
-  weakness_df <- utils::read.csv(url, row.names = 1)
-
-  all_types <- as.list(rownames(weakness_df))
-  keys <- all_types
-  weaknesses <- stats::setNames(rep(0, length(keys)), keys)
-
-  for (attacking_type in all_types) {
+  for (i in seq_along(all_types)){
     for (type_combo in team_types) {
-      val1 <- weakness_df[rownames(weakness_df) == attacking_type, type_combo[[1]]]
+      row <- weakness_df |> dplyr::slice(i)
+
+      val1 <- row |> dplyr::pull(type_combo[1])
 
       if (length(type_combo) == 1) {
         val2 <- 1
       } else {
-        val2 <- weakness_df[rownames(weakness_df) == attacking_type, type_combo[[2]]]
+        val2 <- row |> dplyr::pull(type_combo[2])
       }
 
-      if (val1 == 0 || val2 == 0) {
+      if (val1 == 0) {
         next
       } else if ((val1 == 0.5 && val2 == 2) || (val1 == 2 && val2 == 0.5)) {
         next
       } else if (val1 == 2 && val2 == 2) {
-        weaknesses[attacking_type] <- weaknesses[attacking_type] + 2
+        weaknesses[i] <- weaknesses[i] + 2
       } else if ((val1 == 1 && val2 == 2) || (val1 == 2 && val2 == 1)) {
-        weaknesses[attacking_type] <- weaknesses[attacking_type] + 1
+        weaknesses[i] <- weaknesses[i] + 1
       }
     }
   }
@@ -252,17 +246,32 @@ recommend <- function(current_team, n_recommendations=1,
 #' weaknesses and resistances.
 #' Higher values indicate a more balanced team.
 #'
-#' @param resistances: list of resistances obtained from calc_resistances
-#' @param weaknesses: list of weaknesses obtained from calc_weaknesses
+#' @param resistances: named vector of resistances obtained from calc_resistances
+#' @param weaknesses: named vector of weaknesses obtained from calc_weaknesses
 #'
 #' @return  balance : float
 #' measure of how balanced the team is.
 #' @export
 #'
 #' @examples
-#' calc_balance(c(Normal = 0, Fire = 3), c(Normal = 0, Fire = 3))
+#' calc_balance(c('Normal' = 0, 'Fire' = 3), c('Normal' = 1, 'Fire' = 2))
 #'
 calc_balance <- function(resistances, weaknesses) {
-  # Function code (TBD in Milestone 3)
-  rnorm(1) # Temporary placeholder
+
+  type_advantages <- resistances
+  for (j in seq_along(type_advantages)){
+    delta = resistances[j] - weaknesses[j]
+
+    # Peicewise function to penalize negative values more
+    # (i.e. to favor penalizing weaknesses over rewaring resistances)
+    if (delta >= 0){
+      type_advantages[j] = delta ** (3 / 4)
+    }
+    else{
+      type_advantages[j] = -(-delta) ** (3 / 2)
+    }
+  }
+
+  balance <- sum(type_advantages)
+  return(balance)
 }
