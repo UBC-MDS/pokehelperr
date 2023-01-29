@@ -136,17 +136,33 @@ calc_weaknesses <- function(team_types) {
 #' most resistant to via `calc_resistances` and
 #' `calc_weaknesses`, and then makes its recommendation
 #' based on this information.
+#' In particular, it uses `calc_balance` together a brute-force search of
+#' all ~700 pokémon to determine its recommendation based on the objective of
+#' maximizing balance.
 #'
-#' @param current_team: list of strings
-#' list of up to 5 pokémon names
+#' @param current_team : character vector
+#' character vector of up to 5 pokémon names
+#' @param n_recommendations : integer
+#' number of pokemon to recommend (default = 1).
+#' @param include_legendaries : boolean
+#' whether or not to include legendary pokémon in
+#' the recommendations (default = False).
+#' @param inlude_megas : boolean
+#' whether or not to include Mega pokémon in
+#' the recommendations (default = False).
+#' @param verbose : boolean
+#' whether or not to print progress updates during the brute-force search.
+#' @param early_stop : boolean
+#' whether or not to stop the brute force search early
+#' (for speeding up unit testing) (default = False).
 #'
-#' @return recommendation: string
+#' @return recommendation : character vector
 #' the name of a pokémon that could be added to the input
 #' team to make its weaknesses and resistances more balanced.
 #' @export
 #'
 #' @examples
-#' recommend(list('Pikachu', 'Eevee', 'Charizard'))
+#' recommend(c('Pikachu', 'Eevee', 'Charizard'))
 #'
 recommend <- function(current_team) {
   # Function code (TBD in Milestone 3)
