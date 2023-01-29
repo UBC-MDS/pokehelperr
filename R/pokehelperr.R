@@ -77,7 +77,6 @@ calc_resistances <- function(team_list) {
 #' calc_weaknesses(list(list("Electric"), list("Fire", "Flying")))
 #'
 calc_weaknesses <- function(team_types) {
-  
   if (length(team_types) == 0) {
     stop("Input should be a non-empty list of pokemon types.")
   }
@@ -89,35 +88,35 @@ calc_weaknesses <- function(team_types) {
   if (length(team_types[[1]]) == 0) {
     stop("Input should be a non-empty list of non-empty lists of pokemon types.")
   }
-  
-  if(!all(sapply(team_types, function(x) all(sapply(x, is.character))))) {
+
+  if (!all(sapply(team_types, function(x) all(sapply(x, is.character))))) {
     stop("Input should be a list of lists of strings.")
   }
-  
-  url <- 'https://raw.githubusercontent.com/zonination/pokemon-chart/master/chart.csv'
+
+  url <- "https://raw.githubusercontent.com/zonination/pokemon-chart/master/chart.csv"
   weakness_df <- utils::read.csv(url, row.names = 1)
-  
+
   all_types <- as.list(rownames(weakness_df))
   keys <- all_types
   weaknesses <- stats::setNames(rep(0, length(keys)), keys)
-  
-  for(attacking_type in all_types){
-    for(type_combo in team_types){
+
+  for (attacking_type in all_types) {
+    for (type_combo in team_types) {
       val1 <- weakness_df[rownames(weakness_df) == attacking_type, type_combo[[1]]]
-      
-      if(length(type_combo) == 1){
+
+      if (length(type_combo) == 1) {
         val2 <- 1
-      } else{
+      } else {
         val2 <- weakness_df[rownames(weakness_df) == attacking_type, type_combo[[2]]]
       }
-      
-      if(val1 == 0 || val2 == 0){
+
+      if (val1 == 0 || val2 == 0) {
         next
-      } else if((val1 == 0.5 && val2 == 2) || (val1 == 2 && val2 == 0.5)){
+      } else if ((val1 == 0.5 && val2 == 2) || (val1 == 2 && val2 == 0.5)) {
         next
-      } else if(val1 == 2 && val2 == 2){
+      } else if (val1 == 2 && val2 == 2) {
         weaknesses[attacking_type] <- weaknesses[attacking_type] + 2
-      } else if((val1 == 1 && val2 == 2) || (val1 == 2 && val2 == 1)){
+      } else if ((val1 == 1 && val2 == 2) || (val1 == 2 && val2 == 1)) {
         weaknesses[attacking_type] <- weaknesses[attacking_type] + 1
       }
     }
