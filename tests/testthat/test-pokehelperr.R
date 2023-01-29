@@ -1,16 +1,16 @@
 test_that("Able to handle improper capitalization", {
-  expect_equal(get_types(list("RaICHu", "zubAt")), list(list("Electric"), list("Poison", "Flying")))
+  expect_equal(get_types(list("RaICHu", "zubAt")), list(c("Electric"), c("Poison", "Flying")))
 })
 
 test_that("Able to handle improper punctuation", {
-  expect_equal(get_types(list("Snorlax!!", "...Chingling")), list(list("Normal"),
-                                                                 list("Psychic")))
+  expect_equal(get_types(list("Snorlax!!", "...Chingling")), list(c("Normal"),
+                                                                 c("Psychic")))
 })
 
 test_that("Able to handle Pokemon with symbol in the name", {
-  expect_equal(get_types(list("Mime Jr.", "Porygon-Z", "Nidoran♀")), list(list("Psychic", "Fairy"),
-                                                                         list("Normal"),
-                                                                         list("Poison")))
+  expect_equal(get_types(list("Mime Jr.", "Porygon-Z", "Nidoran♀")), list(c("Psychic", "Fairy"),
+                                                                         c("Normal"),
+                                                                         c("Poison")))
 })
 
 

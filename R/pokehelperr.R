@@ -25,17 +25,18 @@ get_types <- function(pokemon_names) {
       pokemon_names = list(c(pokemon_names))
     }
 
-    assert("Input is a list of pokemon names.", {
-       is.list(pokemon_names)
-    })
-    assert("Input should be a non-empty list of pokemon names.", {
-      length(list) > 0
-    })
-    assert("Input should be a list of pokemon names.", {
-      is.character(pokemon_names[[1]])
-    })
 
-    data_location <- paste0(here::here(), '/data/pokemon.csv')  
+    if (!is.list(pokemon_names)){
+      stop("Input should be a list of pokemon names.")
+    }
+    if (length(pokemon_names) == 0) {
+    stop("Input should be a non-empty list of pokemon names.")
+    }
+    if (!all(sapply(pokemon_names, is.character))) {
+      stop("Input should be a list of character vectors of pokemon names.")
+    }
+
+    data_location <- paste0(here::here(), '/data/pokemon.csv')
     names_types_df  <- readr::read_csv(data_location, show_col_types = FALSE)
 
     names_types_df <- names_types_df |>
@@ -56,15 +57,17 @@ get_types <- function(pokemon_names) {
         type <- names_types_df |>
           dplyr::filter(Name == name)
 
-        assert("Pokemon not in the list", {
-          (nrow(type) > 0)
-        })
+        if (nrow(type) == 0) {
+          stop("Pokemon not in the list.")
+        }
 
-        if (type$`Type.2` != ""){
-          poke_types[[length(poke_types)+1]] <- list(type$`Type.1`, type$`Type.2`)
+        type_1 <- type |> dplyr::pull(`Type 1`)
+        type_2 <- type |> dplyr::pull(`Type 2`)
+        if (!is.na(type_2)){
+          poke_types[[length(poke_types)+1]] <- c(type_1, type_2)
         }
         else {
-          poke_types[[length(poke_types)+1]] <- list(type$`Type.1`)
+          poke_types[[length(poke_types)+1]] <- c(type_1)
         }
     }
 
