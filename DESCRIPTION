@@ -17,4 +17,5 @@ Config/testthat/edition: 3
 Imports: 
     stats,
     utils,
-    readr
+    readr,
+    dplyr
