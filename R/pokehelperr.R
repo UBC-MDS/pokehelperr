@@ -35,7 +35,8 @@ get_types <- function(pokemon_names) {
       is.character(pokemon_names[[1]])
     })
 
-    names_types_df  <- read.csv('data/pokemon.csv')
+    data_location <- paste0(here::here(), '/data/pokemon.csv')  
+    names_types_df  <- readr::read_csv(data_location, show_col_types = FALSE)
 
     names_types_df <- names_types_df |>
         dplyr::mutate(Name = glue::trim(Name), Name = tolower(Name))
