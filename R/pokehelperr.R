@@ -88,24 +88,22 @@ calc_weaknesses <- function(team_types) {
     stop("Input should be a list of character vectors of pokemon types.")
   }
 
-  if (length(team_types[[1]]) == 0) {
-    stop("Input should be a non-empty list of non-empty character vectors of pokemon types.")
-  }
-
   data_location <- paste0(here::here(), '/data/type_chart.csv')
   weakness_df <- readr::read_csv(data_location, show_col_types = FALSE)
 
   all_types <- weakness_df$Attacking
   weaknesses <- stats::setNames(rep(0, length(all_types)), all_types)
 
-  for (attacking_type in all_types) {
+  for (i in seq_along(all_types)){
     for (type_combo in team_types) {
-      val1 <- weakness_df |> filter(Attacking == attacking_type) |> pull(type_combo[1])
+      row <- weakness_df |> dplyr::slice(i)
+
+      val1 <- row |> dplyr::pull(type_combo[1])
 
       if (length(type_combo) == 1) {
         val2 <- 1
       } else {
-        val2 <- weakness_df |> filter(Attacking == attacking_type) |> pull(type_combo[2])
+        val2 <- row |> dplyr::pull(type_combo[2])
       }
 
       if (val1 == 0) {
@@ -113,9 +111,9 @@ calc_weaknesses <- function(team_types) {
       } else if ((val1 == 0.5 && val2 == 2) || (val1 == 2 && val2 == 0.5)) {
         next
       } else if (val1 == 2 && val2 == 2) {
-        weaknesses[attacking_type] <- weaknesses[attacking_type] + 2
+        weaknesses[i] <- weaknesses[i] + 2
       } else if ((val1 == 1 && val2 == 2) || (val1 == 2 && val2 == 1)) {
-        weaknesses[attacking_type] <- weaknesses[attacking_type] + 1
+        weaknesses[i] <- weaknesses[i] + 1
       }
     }
   }
