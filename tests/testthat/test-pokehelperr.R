@@ -14,6 +14,33 @@ test_that("Able to handle Pokemon with symbol in the name", {
 })
 
 
+test_that("`calc_resistances` returns valid results", {
+  input_list <- list(c("Electric"), c("Fire", "Flying"))
+  actual <- calc_resistances(input_list)
+  expected<- c(Normal = 0, Fire = 1, Water = 0, Electric = 1, Grass = 2, Ice = 0, Fighting = 1,
+               Poison = 0, Ground = 3, Flying = 1, Psychic = 0, Bug = 2, Rock = 0, Ghost = 0,
+               Dragon = 0, Dark = 0, Steel = 2, Fairy = 1)
+  expect_equal(actual, expected)
+  expect_true(is.vector(actual))
+})
+
+test_that("`calc_resistances` adding 3 points for immunity", {
+  input_list <- list(c("Normal"))
+  actual <- calc_resistances(input_list)
+  expected<- c(Normal = 0, Fire = 0, Water = 0, Electric = 0, Grass = 0, Ice = 0, Fighting = 0,
+               Poison = 0, Ground = 0, Flying = 0, Psychic = 0, Bug = 0, Rock = 0, Ghost = 3,
+               Dragon = 0, Dark = 0, Steel = 0, Fairy = 0)
+  expect_equal(actual, expected)
+  expect_true(is.vector(actual))
+})
+
+test_that("`calc_resistances` returns an error when the input is invalid", {
+  expect_error(calc_resistances(list()), "Input should be a non-empty list of pokemon types.")
+  expect_error(calc_resistances(list(list(2))), "Input should be a list of character vectors of pokemon types.")
+  expect_error(calc_resistances(list(c())), "Input should be a list of character vectors of pokemon types.")
+})
+
+
 test_that("`calc_weaknesses` returns valid results", {
   input_list <- list(c("Fire"), c("Steel", "Flying"), c("Grass", "Ice"))
   actual <- calc_weaknesses(input_list)

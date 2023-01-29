@@ -70,7 +70,6 @@ get_types <- function(pokemon_names) {
     return (poke_types)
 }
 
-
 #' calc_resistances
 #'
 #' @description
@@ -82,7 +81,7 @@ get_types <- function(pokemon_names) {
 #' resistance the input team has to that type. Higher values indicate a
 #' higher level of resistance to that type (name).
 
-#' @param team_list a list of Pokemon types.
+#' @param team_types a list of Pokemon types.
 #'
 #' @return resistance_list a list of all Pokemon names and integers
 # '                        measuring the level of resistance the input
@@ -91,13 +90,49 @@ get_types <- function(pokemon_names) {
 #' @export
 #'
 #' @examples
-#' calc_resistances(list(list("Electric"), list("Fire", "Flying")))
+#' calc_resistances(list(c("Electric"), c("Fire", "Flying")))
 #'
-calc_resistances <- function(team_list) {
-  # Function code (TBD in Milestone 3)
-  c('Normal' = 1 , 'Fire' = 3, 'Water' = 1 ) # Temporary placeholder
-}
+calc_resistances <- function(team_types) {
 
+  if (length(team_types) == 0) {
+    stop("Input should be a non-empty list of pokemon types.")
+  }
+
+  if (!is.list(team_types) || !all(sapply(team_types, is.character))) {
+    stop("Input should be a list of character vectors of pokemon types.")
+  }
+
+  data_location <- paste0(here::here(), '/data/type_chart.csv')
+  resistances_df <- readr::read_csv(data_location, show_col_types = FALSE)
+
+  all_types <- resistances_df$Attacking
+  resistances <- stats::setNames(rep(0, length(all_types)), all_types)
+
+  for (i in seq_along(all_types)){
+    for (type_combo in team_types) {
+      row <- resistances_df |> dplyr::slice(i)
+
+      val1 <- row |> dplyr::pull(type_combo[1])
+
+      if (length(type_combo) == 1) {
+        val2 <- 1
+      } else {
+        val2 <- row |> dplyr::pull(type_combo[2])
+      }
+
+      if (val1 == 0 || val2 == 0) {
+        resistances[i] <- resistances[i] + 3
+      } else if ((val1 == 0.5 && val2 == 2) || (val1 == 2 && val2 == 0.5)) {
+        next
+      } else if (val1 == 0.5 && val2 == 0.5) {
+        resistances[i] <- resistances[i] + 2
+      } else if ((val1 == 1 && val2 == 0.5) || (val1 == 0.5 && val2 == 1)) {
+        resistances[i] <- resistances[i] + 1
+      }
+    }
+  }
+  return(resistances)
+}
 
 #' calc_weaknesses
 #'
