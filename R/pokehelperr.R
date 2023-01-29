@@ -41,6 +41,8 @@ get_types <- function(pokemon_names) {
 # '                        measuring the level of resistance the input
 #'                         team has to that type as values.
 #'
+#' @export
+#'
 #' @examples
 #' calc_resistances(list(list("Electric"), list("Fire", "Flying")))
 #'
@@ -75,9 +77,52 @@ calc_resistances <- function(team_list) {
 #' calc_weaknesses(list(list("Electric"), list("Fire", "Flying")))
 #'
 calc_weaknesses <- function(team_types) {
-  # Function code (TBD in Milestone 3)
-}
+  if (length(team_types) == 0) {
+    stop("Input should be a non-empty list of pokemon types.")
+  }
 
+  if (!is.list(team_types) || !all(sapply(team_types, is.list))) {
+    stop("Input should be a list of lists of pokemon types.")
+  }
+
+  if (length(team_types[[1]]) == 0) {
+    stop("Input should be a non-empty list of non-empty lists of pokemon types.")
+  }
+
+  if (!all(sapply(team_types, function(x) all(sapply(x, is.character))))) {
+    stop("Input should be a list of lists of strings.")
+  }
+
+  url <- "https://raw.githubusercontent.com/zonination/pokemon-chart/master/chart.csv"
+  weakness_df <- utils::read.csv(url, row.names = 1)
+
+  all_types <- as.list(rownames(weakness_df))
+  keys <- all_types
+  weaknesses <- stats::setNames(rep(0, length(keys)), keys)
+
+  for (attacking_type in all_types) {
+    for (type_combo in team_types) {
+      val1 <- weakness_df[rownames(weakness_df) == attacking_type, type_combo[[1]]]
+
+      if (length(type_combo) == 1) {
+        val2 <- 1
+      } else {
+        val2 <- weakness_df[rownames(weakness_df) == attacking_type, type_combo[[2]]]
+      }
+
+      if (val1 == 0 || val2 == 0) {
+        next
+      } else if ((val1 == 0.5 && val2 == 2) || (val1 == 2 && val2 == 0.5)) {
+        next
+      } else if (val1 == 2 && val2 == 2) {
+        weaknesses[attacking_type] <- weaknesses[attacking_type] + 2
+      } else if ((val1 == 1 && val2 == 2) || (val1 == 2 && val2 == 1)) {
+        weaknesses[attacking_type] <- weaknesses[attacking_type] + 1
+      }
+    }
+  }
+  return(weaknesses)
+}
 
 #' recommend
 #'
@@ -122,10 +167,7 @@ recommend <- function(current_team) {
 #' @export
 #'
 #' @examples
-#' bad_team = ['Abomasnow', 'Ferrothorn', 'Parasect'] # All are doubly weak to fire
-#' resistances = calc_resistances(get_types(bad_team))
-#' weaknesses = calc_weaknesses(get_types(bad_team))
-#' calc_balance(resistances, weaknesses)
+#' calc_balance(c(Normal = 0, Fire = 3), c(Normal = 0, Fire = 3))
 #'
 calc_balance <- function(resistances, weaknesses) {
   # Function code (TBD in Milestone 3)
