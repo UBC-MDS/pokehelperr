@@ -1,4 +1,21 @@
 
+test_that("`calc_weaknesses` returns valid results", {
+  input_list <- list(c("Fire"), c("Steel", "Flying"), c("Grass", "Ice"))
+  actual <- calc_weaknesses(input_list)
+  expected<- c(Normal = 0, Fire = 3, Water = 1, Electric = 1, Grass = 0, Ice = 0, Fighting = 1,
+               Poison = 1, Ground = 1, Flying = 1, Psychic = 0, Bug = 1, Rock = 2, Ghost = 0,
+               Dragon = 0, Dark = 0, Steel = 1, Fairy = 0)
+  expect_equal(actual, expected)
+  expect_true(is.vector(actual))
+})
+
+test_that("`calc_weaknesses` returns an error when the input is invalid", {
+  expect_error(calc_weaknesses(list()), "Input should be a non-empty list of pokemon types.")
+  expect_error(calc_weaknesses(list(list(2))), "Input should be a list of character vectors of pokemon types.")
+  expect_error(calc_weaknesses(list(c())), "Input should be a list of character vectors of pokemon types.")
+})
+
+
 test_that("`recommend` returns the correct type of output.", {
   output <- recommend(
     c('Pikachu', 'Charizard'),
@@ -25,6 +42,7 @@ test_that("`recommend` returns the correct type of output.", {
   expect_type(output, "character")
   expect_equal(length(output), n)
 })
+
 
 test_that("`calc_balance` returns the correct type of output.", {
   # Fixtures
