@@ -252,15 +252,15 @@ recommend <- function(current_team, n_recommendations=1,
 #' weaknesses and resistances.
 #' Higher values indicate a more balanced team.
 #'
-#' @param resistances: list of resistances obtained from calc_resistances
-#' @param weaknesses: list of weaknesses obtained from calc_weaknesses
+#' @param resistances: named vector of resistances obtained from calc_resistances
+#' @param weaknesses: named vector of weaknesses obtained from calc_weaknesses
 #'
 #' @return  balance : float
 #' measure of how balanced the team is.
 #' @export
 #'
 #' @examples
-#' calc_balance(c(Normal = 0, Fire = 3), c(Normal = 0, Fire = 3))
+#' calc_balance(c('Normal' = 0, 'Fire' = 3), c('Normal' = 1, 'Fire' = 2))
 #'
 calc_balance <- function(resistances, weaknesses) {
   # Function code (TBD in Milestone 3)
