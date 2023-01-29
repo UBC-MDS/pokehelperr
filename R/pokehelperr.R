@@ -64,7 +64,7 @@ calc_resistances <- function(team_list) {
 #' weakness the input team has to that key (type). Higher values indicate a
 #' higher level of weakness to that type.
 #'
-#' @param team_list : list of list of strings
+#' @param team_list : list of character vectors
 #'        list of pokémon types associated to the user's team obtained
 #'        via `get_types`
 #'
@@ -79,6 +79,9 @@ calc_resistances <- function(team_list) {
 #' calc_weaknesses(list(list("Electric"), list("Fire", "Flying")))
 #'
 calc_weaknesses <- function(team_types) {
+
+  # return(c('Normal' = 1 , 'Fire' = 3, 'Water' = 1 )) # Temporary placeholder
+
   if (length(team_types) == 0) {
     stop("Input should be a non-empty list of pokemon types.")
   }
@@ -263,6 +266,21 @@ recommend <- function(current_team, n_recommendations=1,
 #' calc_balance(c('Normal' = 0, 'Fire' = 3), c('Normal' = 1, 'Fire' = 2))
 #'
 calc_balance <- function(resistances, weaknesses) {
-  # Function code (TBD in Milestone 3)
-  rnorm(1) # Temporary placeholder
+
+  type_advantages <- resistances
+  for (j in seq_along(type_advantages)){
+    delta = resistances[j] - weaknesses[j]
+
+    # Peicewise function to penalize negative values more
+    # (i.e. to favor penalizing weaknesses over rewaring resistances)
+    if (delta >= 0){
+      type_advantages[j] = delta ** (3 / 4)
+    }
+    else{
+      type_advantages[j] = -(-delta) ** (3 / 2)
+    }
+  }
+
+  balance <- sum(type_advantages)
+  return(balance)
 }
