@@ -80,42 +80,35 @@ calc_resistances <- function(team_list) {
 #'
 calc_weaknesses <- function(team_types) {
 
-  # return(c('Normal' = 1 , 'Fire' = 3, 'Water' = 1 )) # Temporary placeholder
-
   if (length(team_types) == 0) {
     stop("Input should be a non-empty list of pokemon types.")
   }
 
-  if (!is.list(team_types) || !all(sapply(team_types, is.list))) {
-    stop("Input should be a list of lists of pokemon types.")
+  if (!is.list(team_types) || !all(sapply(team_types, is.character))) {
+    stop("Input should be a list of character vectors of pokemon types.")
   }
 
   if (length(team_types[[1]]) == 0) {
-    stop("Input should be a non-empty list of non-empty lists of pokemon types.")
+    stop("Input should be a non-empty list of non-empty character vectors of pokemon types.")
   }
 
-  if (!all(sapply(team_types, function(x) all(sapply(x, is.character))))) {
-    stop("Input should be a list of lists of strings.")
-  }
+  data_location <- paste0(here::here(), '/data/type_chart.csv')
+  weakness_df <- readr::read_csv(data_location, show_col_types = FALSE)
 
-  url <- "https://raw.githubusercontent.com/zonination/pokemon-chart/master/chart.csv"
-  weakness_df <- utils::read.csv(url, row.names = 1)
-
-  all_types <- as.list(rownames(weakness_df))
-  keys <- all_types
-  weaknesses <- stats::setNames(rep(0, length(keys)), keys)
+  all_types <- weakness_df$Attacking
+  weaknesses <- stats::setNames(rep(0, length(all_types)), all_types)
 
   for (attacking_type in all_types) {
     for (type_combo in team_types) {
-      val1 <- weakness_df[rownames(weakness_df) == attacking_type, type_combo[[1]]]
+      val1 <- weakness_df |> filter(Attacking == attacking_type) |> pull(type_combo[1])
 
       if (length(type_combo) == 1) {
         val2 <- 1
       } else {
-        val2 <- weakness_df[rownames(weakness_df) == attacking_type, type_combo[[2]]]
+        val2 <- weakness_df |> filter(Attacking == attacking_type) |> pull(type_combo[2])
       }
 
-      if (val1 == 0 || val2 == 0) {
+      if (val1 == 0) {
         next
       } else if ((val1 == 0.5 && val2 == 2) || (val1 == 2 && val2 == 0.5)) {
         next
