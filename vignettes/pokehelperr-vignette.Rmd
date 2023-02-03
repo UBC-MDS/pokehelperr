@@ -1,0 +1,103 @@
+---
+title: "pokehelperr-vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{pokehelperr-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Welcome to Pokehelperr! 
+
+Pokehelperr is an R package designed to assist Pokémon players in building teams of pokémon. Users can provide a list of pokémon currently on their team, and Pokehelperr will make a suitable recommendation for pokémon which can strengthen the current team by balancing it's overall weaknesses and resistances.
+
+Given a list of up to five pokémon currently on a team, pokehelpyer will determine which types the team is most weak to and which types the team is most resistant to. Based on this information, pokehelpyer will then recommend a pokémon that could be added to the current team to make its weaknesses and resistances more balanced.
+
+To use Pokehelperr in a project, we will first import the package as shown below:
+
+
+```{r setup}
+library(pokehelperr)
+```
+
+Pokehelperr currently includes five different functions which can be used to explore the resistances and weaknesses of our pokémon team. Using these functions effectively can help us build a strong team of pokémon.
+
+###get_types
+
+The get_types function takes an input list of pokémon currently in our team and determines the type of each pokémon using an existing dataset. Please note that some pokémon have dual types and some pokémon have a single type. Hence, the output will be a list of character vectors in which each inner list will contain the type(s) of the each pokémon.
+
+In the example below, Pikachu, Eevee, and Metapod are all single-type pokémon, whereas Charizard is a dual-type pokémon.
+
+
+```{r}
+team_types <- get_types(list('Pikachu', 'Eevee', 'Charizard', 'Metapod'))
+team_types
+```
+
+###calc_weaknesses and calc_resistances
+
+Each type of pokémon is weak to and resistant to attacks from certain other types of pokémon. For example, fire-type pokémon are weak to water-type attacks and resistant to bug-type attacks.
+
+This is complicated a bit by dual-types pokémon. Some dual-typed pokemon can be doubly weak or doubly resistant to certain types. For an example of double weakness, we have Abomasnow, which is both ice-type and grass-type, and as a result is doubly weak to fire-type attacks. An example of double resistance is Skarmory, which is both steel-type and flying-type, and as a result is doubly resistant to bug-type attacks and grass-type attacks.
+
+Further, some dual-typed pokemon can have a weakness cancel out with a resistance. For an example, we can consider Skarmory yet again. Flying-type pokemon are weak to rock-type and ice-type attacks, but steel-type pokemon are resistant to rock-type and ice-type attacks. As a result, Skarmory takes normal damage from rock-type and ice-type attacks.
+
+The input for calc_weaknesses / calc_resistances should be a list of lists strings which contains the types of the pokémon on our team (i.e. the output from get_types). These functions then calculate a measure of how weak / resistant our team is to each pokemon type in the game. The output is a dictionary whose keys are each of the 18 types in the game and whose values are integers measuring the level of weakness / resistance our team has to each type. Higher values indicate a higher level of weakness / resistance to that type (key).
+
+```{r}
+
+team_weaknesses <- calc_weaknesses(team_types)
+team_resistances <- calc_resistances(team_types)
+
+print('Weaknesses : ')
+team_weaknesses
+
+print('Resistances : ')
+team_resistances
+
+```
+
+###calc_balance
+
+Since the `recommend` function uses the information in the dictionaries created by `calc_weaknesses` and `calc_resistances` to determine which pokemon could be added to the existing team to make it more "balanced", we must first define a metric to measure how "balanced" a team is. To this end, we use the following:
+
+    > For $i=1,2,\dots, 18$, let $w_i$ be the value corresponding to the $i$ -th pokemon type in the dictionary returned by `calc_weaknesses` and let $r_i$ be the value corresponding to the $i$ -th pokemon type in the dictionary returned by `calc_resistances`. Now define $\delta_i = r_i -  w_i$. If $\delta_i < 0$, then the team is weak (overall) to pokemon type $i$, and this should definitely be considered. The more negative $\delta_i$ is, the more problematic. For example, if a player used a team of 5 fire type pokemon, then $\delta_{\text{water}}$ would be equal to -5, and this would be a big problem. If $\delta_i > 0$, then the team is resistant (overall) to pokemon type $i$, which is a good thing. The more positive the better, but any value greater than zero is good. 
+          
+    > Hence, we penalize negative $\delta_i$ values more than we reward positive $\delta_i$ values. We define the `type-advantage`, $TA$, corresponding to the $i$ -th type to be a piecewise function of $\delta_i$. In particular, 
+
+    > $TA_i = -(-\delta_i)^{\frac{3}{2}}$ if $\delta_i < 0$ and $TA_i = \delta_i^{\frac{3}{4}}$ if $\delta_i \geq 0$.
+
+    > The above $TA$ function penalizes large negative values of $\delta_i$ much more than it penalizes small negative values. On the flip side, it does not reward large positive values of $\delta_i$ much more than it rewards small positive values. 
+
+    > Finally, we define the `balance` metric of a team as follows: $balance = \sum_iTA_i$. Higher values of `balance` indicate well-balanced teams, and lower values indicate teams that could use improvement. 
+
+    The `calc_balance` function takes the dictionaries returned by `calc_weaknesses` and `calc_resistances` as input, and returns the `balance` resulting from the above calculations.
+
+```{r}
+team_balance <- calc_balance(
+    resistances=team_resistances, 
+    weaknesses=team_weaknesses
+)
+
+print(round(team_balance, 3))
+```
+
+### Recommend
+
+The goal of the `recommend` function is the following: `"given an input list of up 5 pokemon, determine which pokemon should be added to the team to maximize its 'balance' metric"`. This is accomplished via a simple brute-force search since the total number of pokemon available is not very large (~700). 
+
+Let's try giving `recommend` a team of five fire-type pokémon. Since this team is very weak to water-type and rock-type attacks, we should expect `recommend` to return pokémon that resists water-type and rock-type attacks. 
+
+```{r}
+fire_team = list('Charmander', 'Torchic', 'Vulpix', 'Flareon', 'Chimchar')
+recommend(fire_team, n_recommendations=2)
+```
+
+Skarmory is doubly-resistant to rock-type attacks and (normally) resistant to water-type attacks. On the other hand, Ferrothorn is doubly-resistant to water-type attacks and (normally) resistant to rock-type attacks. Adding either of these pokemon to our team of five fire-types would definitely help improve the team's balance. Looks like the function is working as expected!!
