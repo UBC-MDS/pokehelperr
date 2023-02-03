@@ -25,3 +25,4 @@ Imports:
     rlang,
     stringr
 VignetteBuilder: knitr
+URL: https://ubc-mds.github.io/pokehelperr/

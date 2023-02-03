@@ -14,7 +14,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Welcome to Pokehelperr! 
+## Welcome to Pokehelperr! 
+
+
 
 Pokehelperr is an R package designed to assist Pokémon players in building teams of pokémon. Users can provide a list of pokémon currently on their team, and Pokehelperr will make a suitable recommendation for pokémon which can strengthen the current team by balancing it's overall weaknesses and resistances.
 
@@ -29,7 +31,7 @@ library(pokehelperr)
 
 Pokehelperr currently includes five different functions which can be used to explore the resistances and weaknesses of our pokémon team. Using these functions effectively can help us build a strong team of pokémon.
 
-###get_types
+## get_types
 
 The get_types function takes an input list of pokémon currently in our team and determines the type of each pokémon using an existing dataset. Please note that some pokémon have dual types and some pokémon have a single type. Hence, the output will be a list of character vectors in which each inner list will contain the type(s) of the each pokémon.
 
@@ -41,7 +43,7 @@ team_types <- get_types(list('Pikachu', 'Eevee', 'Charizard', 'Metapod'))
 team_types
 ```
 
-###calc_weaknesses and calc_resistances
+## calc_weaknesses and calc_resistances
 
 Each type of pokémon is weak to and resistant to attacks from certain other types of pokémon. For example, fire-type pokémon are weak to water-type attacks and resistant to bug-type attacks.
 
@@ -64,7 +66,7 @@ team_resistances
 
 ```
 
-###calc_balance
+## calc_balance
 
 Since the `recommend` function uses the information in the dictionaries created by `calc_weaknesses` and `calc_resistances` to determine which pokemon could be added to the existing team to make it more "balanced", we must first define a metric to measure how "balanced" a team is. To this end, we use the following:
 
@@ -89,7 +91,7 @@ team_balance <- calc_balance(
 print(round(team_balance, 3))
 ```
 
-### Recommend
+## Recommend
 
 The goal of the `recommend` function is the following: `"given an input list of up 5 pokemon, determine which pokemon should be added to the team to maximize its 'balance' metric"`. This is accomplished via a simple brute-force search since the total number of pokemon available is not very large (~700). 
 
