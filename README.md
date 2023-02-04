@@ -1,3 +1,11 @@
+[![test-coverage](https://github.com/UBC-MDS/pokehelperr/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/UBC-MDS/pokehelperr/actions/workflows/test-coverage.yaml)
+
+[![pkgdown](https://github.com/UBC-MDS/pokehelperr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/UBC-MDS/pokehelperr/actions/workflows/pkgdown.yaml)
+
+[![pages-build-deployment](https://github.com/UBC-MDS/pokehelperr/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/UBC-MDS/pokehelperr/actions/workflows/pages/pages-build-deployment)
+
+[![R-CMD-check](https://github.com/UBC-MDS/pokehelperr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UBC-MDS/pokehelperr/actions/workflows/R-CMD-check.yaml)
+
 # pokehelperr
 
 `pokehelperr` is an R package designed to assist Pokémon players in building teams of pokémon. Users can provide a list of pokémon currently on their team, and `pokehelperr` will recommend a suitable pokémon to add to the team based on the current team's overall weaknesses and resistances.
