@@ -26,3 +26,6 @@ Imports:
     stringr
 VignetteBuilder: knitr
 URL: https://ubc-mds.github.io/pokehelperr/
+Depends: 
+    R (>= 2.10)
+LazyData: true
