@@ -70,17 +70,16 @@ team_resistances
 
 Since the `recommend` function uses the information in the dictionaries created by `calc_weaknesses` and `calc_resistances` to determine which pokemon could be added to the existing team to make it more "balanced", we must first define a metric to measure how "balanced" a team is. To this end, we use the following:
 
-    > For $i=1,2,\dots, 18$, let $w_i$ be the value corresponding to the $i$ -th pokemon type in the dictionary returned by `calc_weaknesses` and let $r_i$ be the value corresponding to the $i$ -th pokemon type in the dictionary returned by `calc_resistances`. Now define $\delta_i = r_i -  w_i$. If $\delta_i < 0$, then the team is weak (overall) to pokemon type $i$, and this should definitely be considered. The more negative $\delta_i$ is, the more problematic. For example, if a player used a team of 5 fire type pokemon, then $\delta_{\text{water}}$ would be equal to -5, and this would be a big problem. If $\delta_i > 0$, then the team is resistant (overall) to pokemon type $i$, which is a good thing. The more positive the better, but any value greater than zero is good. 
+-  For $i=1,2,\dots, 18$, let $w_i$ be the value corresponding to the $i$ -th pokemon type in the dictionary returned by `calc_weaknesses` and let $r_i$ be the value corresponding to the $i$ -th pokemon type in the dictionary returned by `calc_resistances`. Now define $\delta_i = r_i -  w_i$. If $\delta_i < 0$, then the team is weak (overall) to pokemon type $i$, and this should definitely be considered. The more negative $\delta_i$ is, the more problematic. For example, if a player used a team of 5 fire type pokemon, then $\delta_{\text{water}}$ would be equal to -5, and this would be a big problem. If $\delta_i > 0$, then the team is resistant (overall) to pokemon type $i$, which is a good thing. The more positive the better, but any value greater than zero is good. 
           
-    > Hence, we penalize negative $\delta_i$ values more than we reward positive $\delta_i$ values. We define the `type-advantage`, $TA$, corresponding to the $i$ -th type to be a piecewise function of $\delta_i$. In particular, 
+- Hence, we penalize negative $\delta_i$ values more than we reward positive $\delta_i$ values. We define the `type-advantage`, $TA$, corresponding to the $i$ -th type to be a piecewise function of $\delta_i$. In particular, 
 
-    > $TA_i = -(-\delta_i)^{\frac{3}{2}}$ if $\delta_i < 0$ and $TA_i = \delta_i^{\frac{3}{4}}$ if $\delta_i \geq 0$.
+     $TA_i = -(-\delta_i)^{\frac{3}{2}}$ if $\delta_i < 0$ and $TA_i = \delta_i^{\frac{3}{4}}$ if $\delta_i \geq 0$.
+- The above $TA$ function penalizes large negative values of $\delta_i$ much more than it penalizes small negative values. On the flip side, it does not reward large positive values of $\delta_i$ much more than it rewards small positive values. 
 
-    > The above $TA$ function penalizes large negative values of $\delta_i$ much more than it penalizes small negative values. On the flip side, it does not reward large positive values of $\delta_i$ much more than it rewards small positive values. 
+  Finally, we define the `balance` metric of a team as follows: $balance = \sum_iTA_i$. Higher values of `balance` indicate well-balanced teams, and lower values indicate teams that could use improvement. 
 
-    > Finally, we define the `balance` metric of a team as follows: $balance = \sum_iTA_i$. Higher values of `balance` indicate well-balanced teams, and lower values indicate teams that could use improvement. 
-
-    The `calc_balance` function takes the dictionaries returned by `calc_weaknesses` and `calc_resistances` as input, and returns the `balance` resulting from the above calculations.
+ The `calc_balance` function takes the dictionaries returned by `calc_weaknesses` and `calc_resistances` as input, and returns the `balance` resulting from the above calculations.
 
 ```{r}
 team_balance <- calc_balance(
@@ -91,7 +90,7 @@ team_balance <- calc_balance(
 print(round(team_balance, 3))
 ```
 
-## Recommend
+## recommend
 
 The goal of the `recommend` function is the following: `"given an input list of up 5 pokemon, determine which pokemon should be added to the team to maximize its 'balance' metric"`. This is accomplished via a simple brute-force search since the total number of pokemon available is not very large (~700). 
 
