@@ -161,7 +161,7 @@ calc_resistances <- function(team_types) {
 #' @export
 #'
 #' @examples
-#' calc_weaknesses(list(list("Electric"), list("Fire", "Flying")))
+#' calc_weaknesses(list(c("Electric"), c("Fire", "Flying")))
 #'
 calc_weaknesses <- function(team_types) {
 
