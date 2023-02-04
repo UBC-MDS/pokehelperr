@@ -86,7 +86,7 @@ its weaknesses and resistances more balanced.</p>
 <p>To use Pokehelperr in a project, we will first import the package as
 shown below:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">pokehelperr</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ubc-mds.github.io/pokehelperr/">pokehelperr</a></span><span class="op">)</span></span></code></pre></div>
 <p>Pokehelperr currently includes five different functions which can be
 used to explore the resistances and weaknesses of our pokémon team.
 Using these functions effectively can help us build a strong team of
@@ -179,18 +179,44 @@ dictionaries created by <code>calc_weaknesses</code> and
 to the existing team to make it more “balanced”, we must first define a
 metric to measure how “balanced” a team is. To this end, we use the
 following:</p>
-<pre><code>&gt; For $i=1,2,\dots, 18$, let $w_i$ be the value corresponding to the $i$ -th pokemon type in the dictionary returned by `calc_weaknesses` and let $r_i$ be the value corresponding to the $i$ -th pokemon type in the dictionary returned by `calc_resistances`. Now define $\delta_i = r_i -  w_i$. If $\delta_i &lt; 0$, then the team is weak (overall) to pokemon type $i$, and this should definitely be considered. The more negative $\delta_i$ is, the more problematic. For example, if a player used a team of 5 fire type pokemon, then $\delta_{\text{water}}$ would be equal to -5, and this would be a big problem. If $\delta_i &gt; 0$, then the team is resistant (overall) to pokemon type $i$, which is a good thing. The more positive the better, but any value greater than zero is good. 
-      
-&gt; Hence, we penalize negative $\delta_i$ values more than we reward positive $\delta_i$ values. We define the `type-advantage`, $TA$, corresponding to the $i$ -th type to be a piecewise function of $\delta_i$. In particular, 
-
-&gt; $TA_i = -(-\delta_i)^{\frac{3}{2}}$ if $\delta_i &lt; 0$ and $TA_i = \delta_i^{\frac{3}{4}}$ if $\delta_i \geq 0$.
-
-&gt; The above $TA$ function penalizes large negative values of $\delta_i$ much more than it penalizes small negative values. On the flip side, it does not reward large positive values of $\delta_i$ much more than it rewards small positive values. 
-
-&gt; Finally, we define the `balance` metric of a team as follows: $balance = \sum_iTA_i$. Higher values of `balance` indicate well-balanced teams, and lower values indicate teams that could use improvement. 
-
-The `calc_balance` function takes the dictionaries returned by `calc_weaknesses` and `calc_resistances` as input, and returns the `balance` resulting from the above calculations.</code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<ul>
+<li><p>For <span class="math inline">\(i=1,2,\dots, 18\)</span>, let
+<span class="math inline">\(w_i\)</span> be the value corresponding to
+the <span class="math inline">\(i\)</span> -th pokemon type in the
+dictionary returned by <code>calc_weaknesses</code> and let <span class="math inline">\(r_i\)</span> be the value corresponding to the
+<span class="math inline">\(i\)</span> -th pokemon type in the
+dictionary returned by <code>calc_resistances</code>. Now define <span class="math inline">\(\delta_i = r_i - w_i\)</span>. If <span class="math inline">\(\delta_i &lt; 0\)</span>, then the team is weak
+(overall) to pokemon type <span class="math inline">\(i\)</span>, and
+this should definitely be considered. The more negative <span class="math inline">\(\delta_i\)</span> is, the more problematic. For
+example, if a player used a team of 5 fire type pokemon, then <span class="math inline">\(\delta_{\text{water}}\)</span> would be equal to
+-5, and this would be a big problem. If <span class="math inline">\(\delta_i &gt; 0\)</span>, then the team is
+resistant (overall) to pokemon type <span class="math inline">\(i\)</span>, which is a good thing. The more
+positive the better, but any value greater than zero is good.</p></li>
+<li>
+<p>Hence, we penalize negative <span class="math inline">\(\delta_i\)</span> values more than we reward
+positive <span class="math inline">\(\delta_i\)</span> values. We define
+the <code>type-advantage</code>, <span class="math inline">\(TA\)</span>, corresponding to the <span class="math inline">\(i\)</span> -th type to be a piecewise function of
+<span class="math inline">\(\delta_i\)</span>. In particular,</p>
+<p><span class="math inline">\(TA_i =
+-(-\delta_i)^{\frac{3}{2}}\)</span> if <span class="math inline">\(\delta_i &lt; 0\)</span> and <span class="math inline">\(TA_i = \delta_i^{\frac{3}{4}}\)</span> if <span class="math inline">\(\delta_i \geq 0\)</span>.</p>
+</li>
+<li>
+<p>The above <span class="math inline">\(TA\)</span> function
+penalizes large negative values of <span class="math inline">\(\delta_i\)</span> much more than it penalizes
+small negative values. On the flip side, it does not reward large
+positive values of <span class="math inline">\(\delta_i\)</span> much
+more than it rewards small positive values.</p>
+<p>Finally, we define the <code>balance</code> metric of a team as
+follows: <span class="math inline">\(balance = \sum_iTA_i\)</span>.
+Higher values of <code>balance</code> indicate well-balanced teams, and
+lower values indicate teams that could use improvement.</p>
+</li>
+</ul>
+<p>The <code>calc_balance</code> function takes the dictionaries
+returned by <code>calc_weaknesses</code> and
+<code>calc_resistances</code> as input, and returns the
+<code>balance</code> resulting from the above calculations.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">team_balance</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_balance.html">calc_balance</a></span><span class="op">(</span></span>
 <span>    resistances<span class="op">=</span><span class="va">team_resistances</span>, </span>
 <span>    weaknesses<span class="op">=</span><span class="va">team_weaknesses</span></span>
@@ -200,7 +226,7 @@ The `calc_balance` function takes the dictionaries returned by `calc_weaknesses`
 <span><span class="co">#&gt; [1] 6.006</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="recommend">Recommend<a class="anchor" aria-label="anchor" href="#recommend"></a>
+<h2 id="recommend">recommend<a class="anchor" aria-label="anchor" href="#recommend"></a>
 </h2>
 <p>The goal of the <code>recommend</code> function is the following:
 <code>"given an input list of up 5 pokemon, determine which pokemon should be added to the team to maximize its 'balance' metric"</code>.
@@ -210,7 +236,7 @@ number of pokemon available is not very large (~700).</p>
 pokémon. Since this team is very weak to water-type and rock-type
 attacks, we should expect <code>recommend</code> to return pokémon that
 resists water-type and rock-type attacks.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fire_team</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">'Charmander'</span>, <span class="st">'Torchic'</span>, <span class="st">'Vulpix'</span>, <span class="st">'Flareon'</span>, <span class="st">'Chimchar'</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/recommend.html">recommend</a></span><span class="op">(</span><span class="va">fire_team</span>, n_recommendations<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Iteration number 1 of 692."</span></span>
