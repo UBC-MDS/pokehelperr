@@ -36,8 +36,10 @@ get_types <- function(pokemon_names) {
       stop("Input should be a list of character vectors of pokemon names.")
     }
 
-    data_location <- paste0(here::here(), '/data/pokemon.csv')
-    names_types_df  <- readr::read_csv(data_location, show_col_types = FALSE)
+    #data_location <- paste0(here::here(), '/data/pokemon.csv')
+    #names_types_df  <- readr::read_csv(data_location, show_col_types = FALSE)
+
+    names_types_df <- pokemon
 
     names_types_df <- names_types_df |>
         dplyr::mutate(Name = glue::trim(Name), Name = tolower(Name))
@@ -106,8 +108,9 @@ calc_resistances <- function(team_types) {
     stop("Input should be a list of character vectors of pokemon types.")
   }
 
-  data_location <- paste0(here::here(), '/data/type_chart.csv')
-  resistances_df <- readr::read_csv(data_location, show_col_types = FALSE)
+  # data_location <- paste0(here::here(), '/data/type_chart.csv')
+  # resistances_df <- readr::read_csv(data_location, show_col_types = FALSE)
+  resistances_df <- type_chart
 
   all_types <- resistances_df$Attacking
   resistances <- stats::setNames(rep(0, length(all_types)), all_types)
@@ -173,8 +176,9 @@ calc_weaknesses <- function(team_types) {
     stop("Input should be a list of character vectors of pokemon types.")
   }
 
-  data_location <- paste0(here::here(), '/data/type_chart.csv')
-  weakness_df <- readr::read_csv(data_location, show_col_types = FALSE)
+  # data_location <- paste0(here::here(), '/data/type_chart.csv')
+  # weakness_df <- readr::read_csv(data_location, show_col_types = FALSE)
+  weakness_df <- type_chart
 
   all_types <- weakness_df$Attacking
   weaknesses <- stats::setNames(rep(0, length(all_types)), all_types)
@@ -249,8 +253,9 @@ recommend <- function(current_team, n_recommendations=1,
     include_legendaries=FALSE, include_megas=FALSE,
     verbose=TRUE, early_stop=FALSE) {
 
-  data_location <- paste0(here::here(), '/data/pokemon.csv')
-  pokemon_df <- readr::read_csv(data_location, show_col_types = FALSE)
+  # data_location <- paste0(here::here(), '/data/pokemon.csv')
+  # pokemon_df <- readr::read_csv(data_location, show_col_types = FALSE)
+  pokemon_df <- pokemon
   if (!include_legendaries){
     pokemon_df <- pokemon_df |> dplyr::filter(Legendary == FALSE)
   }
