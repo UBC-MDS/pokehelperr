@@ -17,7 +17,7 @@
 #' @export
 #'
 #' @examples
-#' get_types(list('Pikachu', 'Eevee', 'Charizard', ...))
+#' get_types(list('Pikachu', 'Eevee', 'Charizard'))
 #'
 get_types <- function(pokemon_names) {
   # Function code (TBD in Milestone 3)

@@ -22,6 +22,6 @@ to the names in a dataset and getting the corresponding type(s)
 of the pokemon. The pokemon names are cleaned before looking for a match.
 }
 \examples{
-get_types(list('Pikachu', 'Eevee', 'Charizard', ...))
+get_types(list('Pikachu', 'Eevee', 'Charizard'))
 
 }
