@@ -7,7 +7,7 @@
 calc_weaknesses(team_types)
 }
 \arguments{
-\item{team_list}{: list of list of strings
+\item{team_list}{: list of character vectors
 list of pokémon types associated to the user's team obtained
 via \code{get_types}}
 }
@@ -27,6 +27,6 @@ weakness the input team has to that key (type). Higher values indicate a
 higher level of weakness to that type.
 }
 \examples{
-calc_weaknesses(list(list("Electric"), list("Fire", "Flying")))
+calc_weaknesses(list(c("Electric"), c("Fire", "Flying")))
 
 }

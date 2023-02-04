@@ -7,9 +7,9 @@
 calc_balance(resistances, weaknesses)
 }
 \arguments{
-\item{resistances:}{list of resistances obtained from calc_resistances}
+\item{resistances:}{named vector of resistances obtained from calc_resistances}
 
-\item{weaknesses:}{list of weaknesses obtained from calc_weaknesses}
+\item{weaknesses:}{named vector of weaknesses obtained from calc_weaknesses}
 }
 \value{
 balance : float
@@ -21,6 +21,6 @@ weaknesses and resistances.
 Higher values indicate a more balanced team.
 }
 \examples{
-calc_balance(c(Normal = 0, Fire = 3), c(Normal = 0, Fire = 3))
+calc_balance(c('Normal' = 0, 'Fire' = 3), c('Normal' = 1, 'Fire' = 2))
 
 }

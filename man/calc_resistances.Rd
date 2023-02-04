@@ -4,10 +4,10 @@
 \alias{calc_resistances}
 \title{calc_resistances}
 \usage{
-calc_resistances(team_list)
+calc_resistances(team_types)
 }
 \arguments{
-\item{team_list}{a list of Pokemon types.}
+\item{team_types}{a list of Pokemon types.}
 }
 \value{
 resistance_list a list of all Pokemon names and integers
@@ -23,6 +23,6 @@ resistance the input team has to that type. Higher values indicate a
 higher level of resistance to that type (name).
 }
 \examples{
-calc_resistances(list(list("Electric"), list("Fire", "Flying")))
+calc_resistances(list(c("Electric"), c("Fire", "Flying")))
 
 }

@@ -4,14 +4,39 @@
 \alias{recommend}
 \title{recommend}
 \usage{
-recommend(current_team)
+recommend(
+  current_team,
+  n_recommendations = 1,
+  include_legendaries = FALSE,
+  include_megas = FALSE,
+  verbose = TRUE,
+  early_stop = FALSE
+)
 }
 \arguments{
-\item{current_team:}{list of strings
+\item{current_team}{: list of character vectors
 list of up to 5 pokémon names}
+
+\item{n_recommendations}{: integer
+number of pokemon to recommend (default = 1).}
+
+\item{include_legendaries}{: boolean
+whether or not to include legendary pokémon in
+the recommendations (default = False).}
+
+\item{verbose}{: boolean
+whether or not to print progress updates during the brute-force search.}
+
+\item{early_stop}{: boolean
+whether or not to stop the brute force search early
+(for speeding up unit testing) (default = False).}
+
+\item{inlude_megas}{: boolean
+whether or not to include Mega pokémon in
+the recommendations (default = False).}
 }
 \value{
-recommendation: string
+recommendation : character vector
 the name of a pokémon that could be added to the input
 team to make its weaknesses and resistances more balanced.
 }
@@ -26,6 +51,9 @@ team is most weak to and which types the team is
 most resistant to via \code{calc_resistances} and
 \code{calc_weaknesses}, and then makes its recommendation
 based on this information.
+In particular, it uses \code{calc_balance} together a brute-force search of
+all ~700 pokémon to determine its recommendation based on the objective of
+maximizing balance.
 }
 \examples{
 recommend(list('Pikachu', 'Eevee', 'Charizard'))
