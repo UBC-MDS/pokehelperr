@@ -65,7 +65,45 @@ devtools::install_github("../pokehelperr")
 
 ## Usage
 
-- TO-DO
+ After installing the package, please follow the below instructions : 
+ 
+```
+library(pokehelperr)
+```
+<br>
+
+`get_types`:
+
+```
+team_types <- get_types(list('Pikachu', 'Eevee', 'Charizard', 'Metapod'))
+team_types
+```
+<br>
+
+`calc_weaknesses` and `calc_resistances`:
+
+```
+team_weaknesses <- calc_weaknesses(team_types)
+team_resistances <- calc_resistances(team_types)
+```
+<br>
+
+`calc_balance`:
+
+```
+team_balance <- calc_balance(
+    resistances=team_resistances, 
+    weaknesses=team_weaknesses
+)
+```
+<br>
+
+`recommend`:
+
+```
+fire_team = list('Charmander', 'Torchic', 'Vulpix', 'Flareon', 'Chimchar')
+recommend(fire_team, n_recommendations=2)
+```
 
 ## Contributors
 - Raul Aguilar
