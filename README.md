@@ -16,7 +16,6 @@ The `pokehelperr` package aims to assist players in avoiding imbalances in weakn
 
 (If you are reading this and aren't familiar with Pokémon, it might be helpful to note that "pokémon" is both the singular and plural form of the word, and also that lowercase "pokémon" refers to an individual character in the game, such as Pikachu, whereas capitalized "Pokémon" refers to the franchise/game.)
 
-
 ## Functions Included
 
 - `get_types`: Given a list of pokémon names, determine the types of those pokémon using an existing dataset.
@@ -25,7 +24,7 @@ The `pokehelperr` package aims to assist players in avoiding imbalances in weakn
 - `calc_resistances`:  Given a list of pokémon types present on a player's team,
     calculate a measure of how resistant the team is to each type in the game.
 
-    - Creates a list in which the names are each of the 18 types
+  - Creates a list in which the names are each of the 18 types
     in the game, and the values are integers measuring the level of
     resistance the input team has to that type. Higher values indicate a
     higher level of resistance to that type.
@@ -34,7 +33,7 @@ The `pokehelperr` package aims to assist players in avoiding imbalances in weakn
 - `calc_weaknesses`: Given a list of pokémon types present on a player's team,
     calculate a measure of how weak the team is to each type in the game.
 
-    - Creates a list in which the names are each of the 18 types
+  - Creates a list in which the names are each of the 18 types
     in the game, and the values are integers measuring the level of
     weakness the input team has to that type. Higher values indicate a
     higher level of weakness to that type.
@@ -44,11 +43,11 @@ The `pokehelperr` package aims to assist players in avoiding imbalances in weakn
     pokémon that could be added to the
     current team to make its weaknesses and
     resistances more balanced.
-    - Determines which types the
+  - Determines which types the
     team is most resistant to and weak to via `calc_resistances` and
     `calc_weaknesses`, and then makes its recommendation
     based on this information.
-    - In particular, it uses `calc_balance` together a brute-force search of
+  - In particular, it uses `calc_balance` together a brute-force search of
     all ~700 pokémon to determine its recommendation based on the objective of
     maximizing balance.
 <br><br>
@@ -62,6 +61,7 @@ The `pokehelperr` package aims to assist players in avoiding imbalances in weakn
 - [type_chart.csv](https://github.com/UBC-MDS/pokehelperr/blob/main/data/type_chart.csv): Dataset containing details abouts the weaknesses and strengths of each type of pokémon.
 
 ## Place Within the R Ecosystem
+
 There are websites and applications that help build pokémon teams, such as the [Mariland Team Builder](https://marriland.com/tools/team-builder/en/). However these tools simply present the player with a visual representation of their current team's weaknesses and resistances. They don't make recommendations. In other words, the existing tools simply given visual representations of the dictionaries created by `calc_weaknesses` and `calc_resistances`. There doesn't seem to be any existing R packages which will use the weaknesses/resistances data to make reccomendations for additional team members.
 
 ## Installation
@@ -73,11 +73,13 @@ devtools::install_github("../pokehelperr")
 
 ## Usage
 
- After installing the package, please follow the below instructions : 
- 
+ After installing the package, please follow the below instructions:
+(See <https://ubc-mds.github.io/pokehelperr/> for a more detailed guide.)
+
 ```
 library(pokehelperr)
 ```
+
 <br>
 
 `get_types`:
@@ -86,6 +88,7 @@ library(pokehelperr)
 team_types <- get_types(list('Pikachu', 'Eevee', 'Charizard', 'Metapod'))
 team_types
 ```
+
 <br>
 
 `calc_weaknesses` and `calc_resistances`:
@@ -94,6 +97,7 @@ team_types
 team_weaknesses <- calc_weaknesses(team_types)
 team_resistances <- calc_resistances(team_types)
 ```
+
 <br>
 
 `calc_balance`:
@@ -104,6 +108,7 @@ team_balance <- calc_balance(
     weaknesses=team_weaknesses
 )
 ```
+
 <br>
 
 `recommend`:
@@ -114,6 +119,7 @@ recommend(fire_team, n_recommendations=2)
 ```
 
 ## Contributors
+
 - Raul Aguilar
 - Jakob Thoms
 - Ritisha Sharma
